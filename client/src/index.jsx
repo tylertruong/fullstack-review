@@ -10,12 +10,32 @@ class App extends React.Component {
     this.state = { 
       repos: []
     }
-
+    this.getRepos();
   }
 
   search (term) {
-    console.log(`${term} was searched`);
-    // TODO
+    $.ajax({
+      method: 'POST',
+      url: `/repos`,
+      data: {username: term},
+      success: (data) => {
+        this.getRepos();
+      },
+      error: (err) => {console.log('error', err)}
+    });
+  }
+
+  getRepos () {
+    $.ajax({
+      method: 'GET',
+      url: `/repos`,
+      dataType: 'json',
+      success: (data) => {
+        console.log('data', data);
+        this.setState({repos: data});
+      },
+      error: (err) => {console.log('OMG ERROR', err)}
+    });
   }
 
   render () {
